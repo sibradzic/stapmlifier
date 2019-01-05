@@ -1,0 +1,35 @@
+diff -ru a/inc/PwrProfCoreUtils.h b/inc/PwrProfCoreUtils.h
+--- a/inc/PwrProfCoreUtils.h
++++ b/inc/PwrProfCoreUtils.h
+@@ -9,7 +9,7 @@
+ 
+ // SYSTEM INCLUDES
+ #include <asm/current.h>
+-#include <asm/ftrace.h>
++#include <linux/ftrace.h>
+ #include <asm/io.h>
+ #include <asm/uaccess.h>
+ #include <linux/delay.h>
+diff -ru a/src/PwrDriverUtils.c b/src/PwrDriverUtils.c
+--- a/src/PwrDriverUtils.c
++++ b/src/PwrDriverUtils.c
+@@ -444,7 +444,7 @@
+ // Get current time from thr kernel
+ void GetTimeStamp(uint64* ts)
+ {
+-    struct timespec t = current_kernel_time();
++    struct timespec64 t = current_kernel_time64();
+     // return value in mill-seconds
+     *ts = (t.tv_sec * 1000 + t.tv_nsec / 1000000);
+ }
+diff -ru a/src/PwrProfTimer.c b/src/PwrProfTimer.c
+--- a/src/PwrProfTimer.c
++++ b/src/PwrProfTimer.c
+@@ -16,6 +16,7 @@
+ #include <linux/atomic.h>
+ #include <linux/cpu.h>
+ #include <linux/poll.h>
++#include <asm/irq_regs.h>
+ 
+ // Project headers
+ #include <PwrCommonConfig.h>
