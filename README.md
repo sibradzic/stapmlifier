@@ -32,27 +32,28 @@ First, we compile our custom ACPI method from source:
 
 Next step is to make sure kernel debugfs is mounted (if not mounted already) and **custom_method** module is loaded. This will allow modifying existing or creating new ACPI methods on runtime:
 
-    mount -t debugfs none /sys/kernel/debug
-    modprobe custom_method
+    sudo mount -t debugfs none /sys/kernel/debug
+    sudo modprobe custom_method
 
 After all kernel bits are ready, we can inject our custom ACPI method:
 
-    cat stapmlifier.aml > /sys/kernel/debug/acpi/custom_method
+    sudo cp stapmlifier.aml /sys/kernel/debug/acpi/custom_method
 
 Finally, we can use a functionality of **acpi_call** kernel module to call our custom ACPI method, starting by loading the module:
 
-    modprobe acpi_call
+    sudo modprobe acpi_call
 
 Now we can call our custom ACPI mettod, named "\STPM", with some parameters of our choosing. For example, to set **STAPM Limit** to 25W:
 
-    echo "\STPM 25000" > /proc/acpi/call
+    echo "\STPM 25000" | sudo tee --append /proc/acpi/call
 
 First parameter is wattage, given in miliwatts. Second optional parameter can be used, that determines which SMU register will be modified. For example:
 
-    echo "\STPM 30000 0x06" > /proc/acpi/call
+    echo "\STPM 30000 0x06" | sudo tee --append /proc/acpi/call
 
 Note the **0x06** parameter, this will select a register that controls **PPT Fast Limit**, and here we will set it to 30W. As our previous example indicates, this second parameter can be omitted, in case of which the method will default to **0x05** which is a register controlling **STAPM Limit**. These are so far known registers:
 
+ * **0x03**: Temperature target?
  * **0x05**: STAPM Limit
  * **0x06**: PPT Fast Limit
  * **0x07**: PPT Slow Limit
