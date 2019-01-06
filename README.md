@@ -24,6 +24,36 @@ In order to make this possible we need some tools and kernel modules (the names 
  * **custom_method**: kernel module that allows runtime ACPI method customization
  * **acpi-call-dkms**: kernel module that allows generating custom ACPI calls on runtime
 
+Looks like Ubuntu is not providing **custom_method** module on their stock kernels (thanks @hyc for the warning), but only on PPA-builds. The module can be built from source with some effort:
+
+    # Enable source packages
+    sudo cp /etc/apt/sources.list /root/sources.list
+    sudo sed -i '/deb-src/s/^# //' /etc/apt/sources.list && sudo apt update
+
+    # Download modules source
+    KVER=$(uname -r)
+    sudo apt build-dep linux-modules-$(uname -r)
+    apt source linux-modules-$(uname -r)
+
+    cd linux-${KVER%%-*}
+    cp /boot/config-$(uname -r) .config
+    cp /usr/src/linux-headers-$(uname -r)/Module.symvers ./
+
+    # Ubuntu kernel version string gymnastics (there must be better way than this?)
+    sed -i 's|SUBLEVEL = .*|SUBLEVEL = 0|' Makefile
+    sed -i "s|.*\(CONFIG_LOCALVERSION=\).*|\1\"-${KVER#*-}\"|" .config
+    sed -i "s|.*\(CONFIG_LOCALVERSION_AUTO\).*|\1=n|" .config
+    sed -i "s|.*\(CONFIG_ACPI_CUSTOM_METHOD\).*|\1=m|" .config
+
+    make kernelrelease
+    make prepare
+    make M=scripts
+    make M=drivers/acpi custom_method.ko
+
+    sudo cp drivers/acpi/custom_method.ko /lib/modules/$(uname -r)/kernel/drivers/acpi/
+    sudo depmod
+    sudo modprobe custom_method
+
 ### Manually overriding STAPM vars
 
 First, we compile our custom ACPI method from source:
