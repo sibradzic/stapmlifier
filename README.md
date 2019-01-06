@@ -58,6 +58,12 @@ Note the **0x06** parameter, this will select a register that controls **PPT Fas
  * **0x06**: PPT Fast Limit
  * **0x07**: PPT Slow Limit
 
+### Helper script
+
+One can also use a convenient helper script to set STAPM parameters, for example:
+
+    ./set-stapm.sh STAPM-limit 25
+
 ### Observing STAPM vars in Linux
 
 For this, one will need AMD's uProf for Linux. In order to monitor power-related metric in Linux, one needs to compile and load **AMDPowerProfiler** kernel module, distributed within the uProf archive or package. However, on recent kernels this module fails to compile, to fix this (on Ubuntu 18.10 at least) follow this guide:
