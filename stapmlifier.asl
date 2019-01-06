@@ -10,12 +10,18 @@ DefinitionBlock ("", "DSDT", 1, "", "", 0x000000002)
     CreateDWordField (XXAA, 0x03, SMUD)
     SSZE = 0x07
 
-    // SMUF: SMU registers pointing to different power properties;
-    //   0x03 : ? temps? (80, 74, 90)
+    // SMUF: DPTCi parameters pointing to different power properties;
+    //   0x01 : STAPM Time Constant in seconds (default 200)
+    //   0x02 : Skin Control Scalar, in percent (default 100)
+    //   0x03 : Thermal Control Limit, in Celsius (float 32?)
+    //   0x04 : ? Package Power Limit (2x DWORD, one for AC, one for DC)?
     //   0x05 : STAPM Limit
-    //   0x06 : PPT Fast Limit
-    //   0x07 : PPT Slow Limit
-    //   0x0B : Some energy limit, applied instantly
+    //   0x06 : Package Power Target (PPT) Fast Limit (XFR power limit?)
+    //   0x07 : Package Power Target (PPT) Slow Limit
+    //   0x08 : ?
+    //   0x09 : ?
+    //   0x0A : ? setting anything here instantly drops STAPM limit to 0?
+    //   0x0B : ? some energy limit?, applied instantly
     //   0x0C : ? <10000 freezes uProf counters
 
     If ((Arg1 == Zero))
@@ -27,7 +33,7 @@ DefinitionBlock ("", "DSDT", 1, "", "", 0x000000002)
       SMUF = Arg1
     }
 
-    // SMUFD: a value in SMU register, in miliwatts
+    // SMUFD: a value in SMU register, mostly in miliwatts
 
     SMUD = ToInteger (Arg0)
     \_SB.ALIB (0x0C, XXAA)

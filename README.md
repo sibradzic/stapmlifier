@@ -9,7 +9,7 @@ On recent AMD mobile (and possibly desktop as well) APUs, system firmware is in 
 This chassis & cooling solution TDP limit is controlled by a variable called 'STAPM Limit', measured in watts, and the choice for its default is entirely in notebook vendor hands. Unfortunately, notebook vendors usually do pretty poor job on setting the appropriate default value for STAPM limit, either due to lack of proper thermal-performance tests and/or due to being conservative (in terms of allowed max dissipated heat, nobody wants a customer complaining 'my notebook is damn too hot'). Even worse, most of the notebook vendors do not even allow choosing the STAPM limit in BIOS. In few instances, user has option to select between 'quiet' and 'performance' modes, where the mode will result in different STAPM Limit setting, but it is a mystery to what actual TDP wattage these modes set the limits to.
 
 Fortunately, some tech savvy people figured out that STAPM variables can be controlled via ACPI. However, methods that control them is vendor and model specific, and sometime even BIOS-revision specific. Some people figured out how to modify their notebook DSDT ACPI tables, in a very model-specific way, to change STAPM limit default. The default ACPI tables can be overridden by some boot-loaders, resulting in custom ACPI logic being executed by OS. However, on some notebooks, despite existing STAPM control methods, no known ACPI events will trigger any of them.
-So far, it has been observed that ACPI STAPM control methods have something in common, they all rely on **ALIB** ACPI method, ehich is usually defined in one of the ACPI SSDT tables. This method is setting appropriate APU SoC SMU10 power-control registers, which has direct implications on STAPM variables.
+So far, it has been observed that ACPI STAPM control methods have something in common, they all rely on **ALIB** ACPI method, ehich is usually defined in one of the ACPI SSDT tables. This method is setting appropriate APU SoC DPTCi (Dynamic Power and Thermal Configuration Interface) parameters, which has direct implications on STAPM behavior.
 
 Overriding DSDT tables is a tedious and complicated endeavor, regardless of OS & boot-loader involved. Fortunately, Linux has a built-in mechanism to inject a custom ACPI method on runtime, allowing using **ALIB** ACPI method in any desired manner (see https://www.kernel.org/doc/Documentation/acpi/method-customizing.txt for details). This mini project is an attempt to create universal and vendor-independent way to control mobile APU STAPM variables via custom ACPI method.
 
@@ -47,16 +47,23 @@ Now we can call our custom ACPI mettod, named "\STPM", with some parameters of o
 
     echo "\STPM 25000" | sudo tee --append /proc/acpi/call
 
-First parameter is wattage, given in miliwatts. Second optional parameter can be used, that determines which SMU register will be modified. For example:
+First parameter is wattage, given in miliwatts. Second optional parameter can be used, that determines which DPTCi parameter will be modified. For example:
 
     echo "\STPM 30000 0x06" | sudo tee --append /proc/acpi/call
 
-Note the **0x06** parameter, this will select a register that controls **PPT Fast Limit**, and here we will set it to 30W. As our previous example indicates, this second parameter can be omitted, in case of which the method will default to **0x05** which is a register controlling **STAPM Limit**. These are so far known registers:
+Note the **0x06** parameter, this will select particular DPTCi parameter that controls **PPT Fast Limit**, and here we will set it to 30W. As our previous example indicates, this second parameter can be omitted, in case of which the method will default to **0x05** which is a parameter controlling **STAPM Limit**. 
 
- * **0x03**: Temperature target?
+### Known DPTCi parameters:
+
+This info was derived from https://support.amd.com/techdocs/44065_arch2008.pdf, by reading some DSDT implememntations as well as some experiments on real hardware:
+
+ * **0x01**: STAPM Time Constant in seconds (default 200)
+ * **0x02**: Skin Control Scalar, in percent (default 100)
+ * **0x03**: Thermal Control Limit, in Celsius (float 32?)
+ * **0x04**: ? Package Power Limit (2x DWORD, one for AC, one for DC)?
  * **0x05**: STAPM Limit
- * **0x06**: PPT Fast Limit
- * **0x07**: PPT Slow Limit
+ * **0x06**: Package Power Target (PPT) Fast Limit (XFR power limit?)
+ * **0x07**: Package Power Target (PPT) Slow Limit
 
 ### Helper script
 
