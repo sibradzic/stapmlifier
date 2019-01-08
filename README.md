@@ -103,11 +103,11 @@ One can also use a convenient helper script to set STAPM parameters, for example
 
 ### Observing STAPM vars in Linux
 
-For this, one will need AMD's uProf for Linux. In order to monitor power-related metric in Linux, one needs to compile and load **AMDPowerProfiler** kernel module, distributed within the uProf archive or package. However, on recent kernels this module fails to compile, to fix this follow this guide (assuming you're on Ubuntu 18.10, and have **AMDuProf_Linux_x64_1.2.275.tar.gz** available in **~/Downloads**, as well as stapmlifier code at **~/stapmlifier**):
+For this, one will need AMD's uProf for Linux. In order to monitor power-related metric in Linux, one needs to compile and load **AMDPowerProfiler** kernel module, distributed within the uProf archive or package. However, on recent kernels this module fails to compile, to fix this follow this guide (assuming you're on Ubuntu 18.10, and have **AMDuProf_Linux_x64_2.0.493.tar.gz** available in **~/Downloads**, as well as stapmlifier code at **~/stapmlifier**):
 
     sudo apt install linux-headers-generic build-essential libelf-dev
-    tar -zxf ~/Downloads/AMDuProf_Linux_x64_1.2.275.tar.gz
-    cd AMDuProf_Linux_x64_1.2.275/bin
+    tar -zxf ~/Downloads/AMDuProf_Linux_x64_2.0.493.tar.gz
+    cd AMDuProf_Linux_x64_2.0.493/bin
 
     MODULE_NAME=AMDPowerProfiler
     MODULE_VERSION=$(cat AMDPowerProfilerVersion) # 7.02
