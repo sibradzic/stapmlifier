@@ -24,7 +24,7 @@ In order to make this possible we need some tools and kernel modules (the names 
  * **custom_method**: kernel module that allows runtime ACPI method customization
  * **acpi-call-dkms**: kernel module that allows generating custom ACPI calls on runtime
 
-Looks like Ubuntu is not providing **custom_method** module on their stock kernels (thanks @hyc for the warning), but only on PPA-builds. The module can be built from source with some effort:
+Looks like Ubuntu is not providing **custom_method** module on their stock kernels (thanks @hyc for the warning), but only on PPA-builds. Also, Ubuntu seems to be suffering from a bug related to debugfs file permission, introduced by [this distro patch](https://git.launchpad.net/~ubuntu-kernel/ubuntu/+source/linux/+git/cosmic/commit/fs/debugfs/file.c?id=a1ba65da9ceae481c154bfd1a2c1550e4566d986) (Well, Fedora suffers from it too). The module can be built from source with some effort:
 
     # Enable source packages
     sudo cp /etc/apt/sources.list /root/sources.list
@@ -48,6 +48,22 @@ Looks like Ubuntu is not providing **custom_method** module on their stock kerne
     make kernelrelease
     make prepare
     make M=scripts
+
+    # workaround for debugfs file permission bug
+    TAB="$(printf '\t')"
+    patch -p1 << EOF
+    --- a/drivers/acpi/custom_method.c
+    +++ b/drivers/acpi/custom_method.c
+    @@ -78,6 +78,7 @@
+     static const struct file_operations cm_fops = {
+     ${TAB}.write = cm_write,
+     ${TAB}.llseek = default_llseek,
+    +${TAB}.open = simple_open,
+     };
+     
+     static int __init acpi_custom_method_init(void)
+    EOF
+
     make M=drivers/acpi custom_method.ko
 
     sudo cp drivers/acpi/custom_method.ko /lib/modules/$(uname -r)/kernel/drivers/acpi/
