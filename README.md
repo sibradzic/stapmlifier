@@ -8,7 +8,7 @@ On recent AMD mobile (and possibly desktop as well) APUs, system firmware is in 
 
 This chassis & cooling solution TDP limit is controlled by a variable called 'STAPM Limit', measured in watts, and the choice for its default is entirely in notebook vendor hands. Unfortunately, notebook vendors usually do pretty poor job on setting the appropriate default value for STAPM limit, either due to lack of proper thermal-performance tests and/or due to being conservative (in terms of allowed max dissipated heat, nobody wants a customer complaining 'my notebook is damn too hot'). Even worse, most of the notebook vendors do not even allow choosing the STAPM limit in BIOS. In few instances, user has option to select between 'quiet' and 'performance' modes, where the mode will result in different STAPM Limit setting, but it is a mystery to what actual TDP wattage these modes set the limits to.
 
-Fortunately, some tech savvy people figured out that STAPM variables can be controlled via ACPI. However, methods that control them is vendor and model specific, and sometime even BIOS-revision specific. Some people figured out how to modify their notebook DSDT ACPI tables, in a very model-specific way, to change STAPM limit default. The default ACPI tables can be overridden by some boot-loaders, resulting in custom ACPI logic being executed by OS. However, on some notebooks, despite existing STAPM control methods, no known ACPI events will trigger any of them.
+Fortunately, some smart people (credis to u/MinecraftAddict131) figured out that STAPM variables can be controlled via ACPI. However, methods that control them is vendor and model specific, and sometime even BIOS-revision specific. Some people figured out how to modify their notebook DSDT ACPI tables, in a very model-specific way, to change STAPM limit default. The default ACPI tables can be overridden by some boot-loaders, resulting in custom ACPI logic being executed by OS. However, on some notebooks, despite existing STAPM control methods, no known ACPI events will trigger any of them.
 So far, it has been observed that ACPI STAPM control methods have something in common, they all rely on **ALIB** ACPI method, ehich is usually defined in one of the ACPI SSDT tables. This method is setting appropriate APU SoC DPTCi (Dynamic Power and Thermal Configuration Interface) parameters, which has direct implications on STAPM behavior.
 
 Overriding DSDT tables is a tedious and complicated endeavor, regardless of OS & boot-loader involved. Fortunately, Linux has a built-in mechanism to inject a custom ACPI method on runtime, allowing using **ALIB** ACPI method in any desired manner (see https://www.kernel.org/doc/Documentation/acpi/method-customizing.txt for details). This mini project is an attempt to create universal and vendor-independent way to control mobile APU STAPM variables via custom ACPI method.
@@ -103,10 +103,10 @@ One can also use a convenient helper script to set STAPM parameters, for example
 
 ### Observing STAPM vars in Linux
 
-For this, one will need AMD's uProf for Linux. In order to monitor power-related metric in Linux, one needs to compile and load **AMDPowerProfiler** kernel module, distributed within the uProf archive or package. However, on recent kernels this module fails to compile, to fix this (on Ubuntu 18.10 at least) follow this guide:
+For this, one will need AMD's uProf for Linux. In order to monitor power-related metric in Linux, one needs to compile and load **AMDPowerProfiler** kernel module, distributed within the uProf archive or package. However, on recent kernels this module fails to compile, to fix this follow this guide (assuming you're on Ubuntu 18.10, and have **AMDuProf_Linux_x64_1.2.275.tar.gz** available in **~/Downloads**, as well as stapmlifier code at **~/stapmlifier**):
 
     sudo apt install linux-headers-generic build-essential libelf-dev
-    tar -zxf Downloads/AMDuProf_Linux_x64_1.2.275.tar.gz/bin
+    tar -zxf ~/Downloads/AMDuProf_Linux_x64_1.2.275.tar.gz
     cd AMDuProf_Linux_x64_1.2.275/bin
 
     MODULE_NAME=AMDPowerProfiler
