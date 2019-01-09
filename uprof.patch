@@ -13,19 +13,20 @@ diff -ru a/inc/PwrProfCoreUtils.h b/inc/PwrProfCoreUtils.h
 diff -ru a/src/PwrDriverUtils.c b/src/PwrDriverUtils.c
 --- a/src/PwrDriverUtils.c
 +++ b/src/PwrDriverUtils.c
-@@ -444,7 +444,7 @@
+@@ -444,7 +444,8 @@
  // Get current time from thr kernel
  void GetTimeStamp(uint64* ts)
  {
 -    struct timespec t = current_kernel_time();
-+    struct timespec64 t = current_kernel_time64();
++    struct timespec64 t;
++    ktime_get_coarse_ts64(&t);
      // return value in mill-seconds
      *ts = (t.tv_sec * 1000 + t.tv_nsec / 1000000);
  }
 diff -ru a/src/PwrProfTimer.c b/src/PwrProfTimer.c
 --- a/src/PwrProfTimer.c
 +++ b/src/PwrProfTimer.c
-@@ -16,6 +16,7 @@
+@@ -17,6 +17,7 @@
  #include <linux/atomic.h>
  #include <linux/cpu.h>
  #include <linux/poll.h>
