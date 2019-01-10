@@ -105,7 +105,7 @@ This info was derived from https://support.amd.com/techdocs/44065_arch2008.pdf, 
 
  * **0x01**: STAPM Time Constant, in seconds (integer: default 200)
  * **0x02**: Skin Control Scalar, in percent (integer: default 100)
- * **0x03**: Thermal Control Limit, in Celsius (Old AMD PDF sais float 32, but on Raven Ridge this is clearly an integar)
+ * **0x03**: Thermal Control Limit, in Celsius (Old AMD PDF sais float 32, but on Raven Ridge this is clearly an integer)
  * **0x04**: ? Package Power Limit (2x DWORD?, one for AC, one for DC)
  * **0x05**: STAPM Limit, in miliwatts (integar)
  * **0x06**: Package Power Target (PPT) Fast Limit, in miliwatts (boost power limit? integer)
