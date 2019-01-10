@@ -103,13 +103,13 @@ Note the **0x06** parameter, this will select particular DPTCi parameter that co
 
 This info was derived from https://support.amd.com/techdocs/44065_arch2008.pdf, by reading some DSDT implememntations as well as some experiments on real hardware:
 
- * **0x01**: STAPM Time Constant in seconds (default 200)
- * **0x02**: Skin Control Scalar, in percent (default 100)
- * **0x03**: Thermal Control Limit, in Celsius (float 32?)
- * **0x04**: ? Package Power Limit (2x DWORD, one for AC, one for DC)?
- * **0x05**: STAPM Limit
- * **0x06**: Package Power Target (PPT) Fast Limit (XFR power limit?)
- * **0x07**: Package Power Target (PPT) Slow Limit
+ * **0x01**: STAPM Time Constant, in seconds (integer: default 200)
+ * **0x02**: Skin Control Scalar, in percent (integer: default 100)
+ * **0x03**: Thermal Control Limit, in Celsius (Old AMD PDF sais float 32, but on Raven Ridge this is clearly an integar)
+ * **0x04**: ? Package Power Limit (2x DWORD?, one for AC, one for DC)
+ * **0x05**: STAPM Limit, in miliwatts (integar)
+ * **0x06**: Package Power Target (PPT) Fast Limit, in miliwatts (boost power limit? integer)
+ * **0x07**: Package Power Target (PPT) Slow Limit, in miliwatts (normal power limit? intager)
 
 ### Helper script
 
