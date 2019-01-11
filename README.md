@@ -24,6 +24,7 @@ In order to make this possible we need some tools and kernel modules (the names 
  * **custom_method**: kernel module that allows runtime ACPI method customization
  * **acpi-call-dkms**: kernel module that allows generating custom ACPI calls on runtime
 
+For compiling the custom ACPI method compilation, one will need an **iasl** (Intel ASL+ Compiler/Disassembler), provided by **acpica-tools** of version 20180629 or newer.
 Looks like Ubuntu is not providing **custom_method** module on their stock kernels (thanks @hyc for the warning), but only on PPA-builds. Also, Ubuntu seems to be suffering from a bug related to debugfs file permission, introduced by [this distro patch](https://git.launchpad.net/~ubuntu-kernel/ubuntu/+source/linux/+git/cosmic/commit/fs/debugfs/file.c?id=a1ba65da9ceae481c154bfd1a2c1550e4566d986) (Well, Fedora suffers from it too). The module can be built from source with some effort:
 
     # Enable source packages
