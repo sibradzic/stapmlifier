@@ -22,7 +22,9 @@ DefinitionBlock ("", "DSDT", 1, "", "", 0x000000002)
     //   0x09 : ?
     //   0x0A : ? setting anything here instantly drops STAPM limit to 0?
     //   0x0B : ? some energy limit?, applied instantly
-    //   0x0C : ? <10000 freezes uProf counters
+    //   0x0C : ? 'Max Combined Power Budget', seems to affect logic that
+    //          shares power budget between CPU & GPU. Set to 60000+ to allow
+    //          GPU to reach max power state even when CPU is not idle
 
     If ((Arg1 == Zero))
     {

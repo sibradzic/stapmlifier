@@ -6,9 +6,10 @@ function usage() {
   echo "Usage:"
   echo "  $0 <parameter> <value>"
   echo "    where <parameter> is one of:"
-  echo "      STAPM-limit" 
-  echo "      PPT-fast" 
-  echo "      PPT-slow" 
+  echo "      STAPM-limit"
+  echo "      PPT-fast"
+  echo "      PPT-slow"
+  echo "      Power-budget"
   echo "      Temp-target"
   echo "    and <value> is in watts or celsius:"
   echo "      25"
@@ -37,6 +38,11 @@ case $1 in
     REGISTER=0x03
     VALUE=${2}
     UNIT=C
+    ;;
+  "Power-budget")
+    REGISTER=0x0C
+    VALUE=${2}000
+    UNIT=W
     ;;
   *)
     usage
