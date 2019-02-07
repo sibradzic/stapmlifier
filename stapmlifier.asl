@@ -16,15 +16,13 @@ DefinitionBlock ("", "DSDT", 1, "", "", 0x000000002)
     //   0x03 : Thermal Control Limit, in Celsius (float 32?)
     //   0x04 : ? Package Power Limit (2x DWORD, one for AC, one for DC)?
     //   0x05 : STAPM Limit
-    //   0x06 : Package Power Target (PPT) Fast Limit (XFR power limit?)
-    //   0x07 : Package Power Target (PPT) Slow Limit
+    //   0x06 : Package Power Target (PPT) Fast Limit (boost limit, miliwatts)
+    //   0x07 : Package Power Target (PPT) Slow Limit (power limit, miliwatts)
     //   0x08 : ?
     //   0x09 : ?
     //   0x0A : ? setting anything here instantly drops STAPM limit to 0?
-    //   0x0B : ? some energy limit?, applied instantly
-    //   0x0C : ? 'Max Combined Power Budget', seems to affect logic that
-    //          shares power budget between CPU & GPU. Set to 60000+ to allow
-    //          GPU to reach max power state even when CPU is not idle
+    //   0x0B : VRM Current Limit (miliampers)
+    //   0x0C : Max VRM Current Limit (CPU+iGPU power budget, miliampers)
 
     If ((Arg1 == Zero))
     {

@@ -9,9 +9,9 @@ function usage() {
   echo "      STAPM-limit"
   echo "      PPT-fast"
   echo "      PPT-slow"
-  echo "      Power-budget"
+  echo "      Max-VRM-Current"
   echo "      Temp-target"
-  echo "    and <value> is in watts or celsius:"
+  echo "    and <value> is in watts, miliamper or celsius:"
   echo "      25"
   echo "Examples:"
   echo "  $0 STAPM-limit 25"
@@ -39,10 +39,10 @@ case $1 in
     VALUE=${2}
     UNIT=C
     ;;
-  "Power-budget")
+  "Max-VRM-Current")
     REGISTER=0x0C
     VALUE=${2}000
-    UNIT=W
+    UNIT=A
     ;;
   *)
     usage

@@ -111,7 +111,8 @@ This info was derived from https://support.amd.com/techdocs/44065_arch2008.pdf, 
  * **0x05**: STAPM Limit, in miliwatts (integar)
  * **0x06**: Package Power Target (PPT) Fast Limit, in miliwatts (boost power limit, integer)
  * **0x07**: Package Power Target (PPT) Slow Limit, in miliwatts (normal power limit, integer)
- * **0x0C**: "Max Combined Power Budget", in miliwatts (power budget? integer)
+ * **0x0B**: VRM Current Limit, in miliampers (immediately affects power budget, integer)
+ * **0x0C**: Max VRM Current Limit, in miliampers (affects CPU+iGPU power budget, integer)
 
 A note on "Max Combined Power Budget". This one is a strange beast, it seems to affect logic that shares power budget between CPU & GPU. Experiments show that, when this is set to 60000+, GPU will reach max power state even when CPU is not completely idle (power priorty is given to GPU?). Comments on this are more than welcome, there is no public documentaton at all explaining this parameter...
 
@@ -121,7 +122,7 @@ One can also use a convenient helper script to set STAPM parameters, for example
 
     ./set-stapm.sh STAPM-limit 25
     ./set-stapm.sh PPT-slow 30
-    ./set-stapm.sh Power-budget 60
+    ./set-stapm.sh Max-VRM-Current 60
     ./set-stapm.sh Temp-target 85
 
 ### Observing STAPM vars in Linux
