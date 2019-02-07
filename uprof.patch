@@ -23,6 +23,20 @@ diff -ru a/src/PwrDriverUtils.c b/src/PwrDriverUtils.c
      // return value in mill-seconds
      *ts = (t.tv_sec * 1000 + t.tv_nsec / 1000000);
  }
+diff -ur a/src/PwrProfDebugHelper.c b/src/PwrProfDebugHelper.c
+--- a/src/PwrProfDebugHelper.c
++++ b/src/PwrProfDebugHelper.c
+@@ -18,8 +18,8 @@
+     {
+         DRVPRINT("Printing Page Buffer ....");
+         DRVPRINT("      Rec Count       : %llu ", pPageBuffer->m_recCnt);
+-        DRVPRINT("      Current Offset  : %d ", ATOMIC_GET(pPageBuffer->m_currentOffset));
+-        DRVPRINT("      Consumed Offset : %d ", ATOMIC_GET(pPageBuffer->m_consumedOffset));
++        DRVPRINT("      Current Offset  : %d ", ATOMIC_GET(0, pPageBuffer->m_currentOffset));
++        DRVPRINT("      Consumed Offset : %d ", ATOMIC_GET(0, pPageBuffer->m_consumedOffset));
+     }
+ }
+ 
 diff -ru a/src/PwrProfTimer.c b/src/PwrProfTimer.c
 --- a/src/PwrProfTimer.c
 +++ b/src/PwrProfTimer.c
